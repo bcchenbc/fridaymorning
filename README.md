@@ -35,6 +35,9 @@ TODO
    - Traffic: numbers of tasks completed by each node in a minutes.
    - Errors: numbers of malformed task calls, on each node.
    - Saturation: memory and cpu utilization for each ndoe.
+3. Now, try to add a new feature to the pipeline. (Try the script "demo/add-new-feature.sh".
+4. A Runner (using Gitlab CI shell runner here) will be triggered to perform a set of jobs based on [.gitlab-ci.yaml].
+5. Let's check the dashboard for the changes.
 
 
 #### Tech Stack
