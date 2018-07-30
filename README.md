@@ -11,22 +11,39 @@ Testing can be expensive and high maintenance to work, to be informative, and re
 
 #### Proposed Solution
 
-Streamlined test-in-production may ease the pain of setting up an ideal test environment. By directing a proportion of workload to containers or virtual machine with new feature/commit, this test-in-production setup can have the most direct feedback from real user. Also, with additional configuration, this setup will support tasks that require live migration. The deliverable will be a system build on: 
+Streamlined test-in-production may ease the pain of setting up an ideal test environment. By directing a proportion of workload to containers or virtual machine with new feature/commit, this test-in-production setup can have the most direct feedback from real user. Also, with additional configuration, this setup will support tasks that require live migration. The deliverable will be a system build on:
 
-- CI/CD enabled version control system 
-- Container/virtual machine orchestration software 
-- Health/performance check and feedback mechanism for rollout/failure-recovery/rollback 
+- CI/CD enabled version control system
+- Container/virtual machine orchestration software
+- Health/performance check and feedback mechanism for rollout/failure-recovery/rollback
 - Monitoring tools
 
- 
+
+
+#### Use Case
+
+The project use a basic streaming pipeline for demonstration. A Twitter Streaming API subscriber script handles the generation of data. A set of scripts built for Kafka facilitates the transfer of data from the source to analytics and storage sinks.
+
+
+###### Setup the demostration (howto for use this repo)
+TODO
+
+###### Expected result
+1. Check thing are up and connected.
+2. Take a look on the Grafana Dashboard. The Dashboard will display:
+   - Latency: completion time for each tasks for the nodes.
+   - Traffic: numbers of tasks completed by each node in a minutes.
+   - Errors: numbers of malformed task calls, on each node.
+   - Saturation: memory and cpu utilization for each ndoe.
+
 
 #### Tech Stack
 
-###### Gitlab CI/CD:	
+###### Gitlab CI/CD:
 
-- Consolidate vcs and CI/CD service	
+- Consolidate vcs and CI/CD service
 - Great flexibility with Shell Runner (and etc.)
-
+- CI features are freely available. ([CE vs EE](https://about.gitlab.com/images/feature_page/gitlab-features.pdf))
 
 ###### Docker Swarm / Terraform + HAProxy
 
