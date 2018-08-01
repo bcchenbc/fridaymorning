@@ -1,0 +1,10 @@
+**** On Tech Stack
+- Kubernetes may be a nice choice, but native weighted load balancing is not easy to implement. The [[https://istio.io/docs/concepts/what-is-istio/overview/][Istio/Envoy]] may worth a look.
+
+- CherryPy for speed or Flask for popularity [[https://blog.appdynamics.com/engineering/a-performance-analysis-of-python-wsgi-servers-part-2/][(see comparison)]].
+
+- HAProxy log in the format of ~6 TR '/' Tw '/' Tc '/' Tr '/' Ta* 10/0/30/69/109~ [[https://serverfault.com/questions/873973/http-request-duration-with-haproxy][for more info]].
+
+- Beats module for HAProxy [[https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-module-haproxy.html][here]].
+
+-

@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  web:
+   image: a_web_page:latest
+   ports:
+     - 8080
+   environment:
+     - SERVICE_PORTS=8080
+   deploy:
+     replicas: 10
+     update_config:
+       parallelism: 1
+       delay: 10s
+     restart_policy:
+       condition: on-failure
+       max_attempts: 3
+       window: 120s
+   networks:
+     - web_network
+
+  proxy:
+    image: haproxy
+    depends_on:
+      - web
+    environment:
+      - BALANCE=roundrobin
+    volumes:
+      - haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 80:80
+      - 1936:1936
+    networks:
+      - web_network
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  web_network:
+    driver: overlay
