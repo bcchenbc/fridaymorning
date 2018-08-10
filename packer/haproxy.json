@@ -1,0 +1,56 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "aws_profile"   : "root"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-west-2",
+    "source_ami_filter": {
+      "filters": {
+      "virtualization-type": "hvm",
+      "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+      "root-device-type": "ebs"
+      },
+      "owners": ["099720109477"],
+      "most_recent": true
+    },
+    "instance_type": "r5.large",
+    "ssh_username": "ubuntu",
+      "ami_name": "FriMornHAProxy {{timestamp}}",
+      "ami_description": "HAProxy server for FridayMorning",
+      "tags": {"Component": "haproxy"}
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt-get update",
+        "sudo apt-get upgrade",
+        "sudo apt-get install -y git haproxy"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo mkdir /{D,P}",
+        "sudo chown ubuntu /{D,P}",
+        ""
+      ]
+    },
+    {
+      "type": "shell",
+      "script": "../services/install_docker.sh"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "ssh-keyscan github.com >> ~/.ssh/known_hosts",
+        "git clone git@github.com:exampleorg/myprivaterepo.git"
+      ]
+    }
+  ]
+}
