@@ -1,10 +1,60 @@
 **** On Tech Stack
 - Kubernetes may be a nice choice, but native weighted load balancing is not easy to implement. The [[https://istio.io/docs/concepts/what-is-istio/overview/][Istio/Envoy]] may worth a look.
 
-- CherryPy for speed or Flask for popularity [[https://blog.appdynamics.com/engineering/a-performance-analysis-of-python-wsgi-servers-part-2/][(see comparison)]].
+- To init HAProxy log:
+  1. Add ~log globla~ or ~log ...~ to ~frontend~ section in [/etc/haproxy/haproxy.cfg].
+  2. Add instructions below to [/etc/rsyslog.d/49-haproxy.conf].
+#+BEGIN_SRC
+$ModLoad imudp
+$UDPServerAddress *
+$UDPServerRun 514
+#+END_SRC
+
 
 - HAProxy log in the format of ~6 TR '/' Tw '/' Tc '/' Tr '/' Ta* 10/0/30/69/109~ [[https://serverfault.com/questions/873973/http-request-duration-with-haproxy][for more info]].
+  https://cbonte.github.io/haproxy-dconv/1.7/configuration.html#8.2.3
+
+
+- CherryPy for speed or Flask for popularity [[https://blog.appdynamics.com/engineering/a-performance-analysis-of-python-wsgi-servers-part-2/][(see comparison)]].
 
 - Beats module for HAProxy [[https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-module-haproxy.html][here]].
 
--
+- To keep docker image size down, keep the layers number small, use [[https://docs.docker.com/develop/develop-images/multistage-build/#use-an-external-image-as-a-stage][multistage build]] for build-and-copy for this purpose.
+
+- Popular tech deployed in docker: https://www.datadoghq.com/docker-adoption/#6:
+  NGINX, Redis, Postgres, Fluentd, Elasticsearch, MongoDB, MySQL, etcd, RabbitMQ, HAProxy
+
+**** Configure HAProxy
+
+- HAProxy for availability: https://debian-administration.org/article/709/Using_the_haproxy_load-balancer_for_increased_availability
+- Using Ansible: https://blog.toast38coza.me/setup-and-configure-haproxy-with-ansible/
+
+**** Stretch Goal
+
+- Look into [[http://riemann.io/quickstart.html][Riemann]] for monitoring+alerting.
+- Look into [[https://docs.fluentd.org/v1.0/categories/logging-from-apps][Centralized App Logging]] for Fluentd.
+- Look into [[http://norikra.github.io/][Norikra]] for SQL on stream processing.
+
+
+**** Other
+
+- Reference on grok: https://www.elastic.co/blog/do-you-grok-grok
+
+- Reset Gitlab root password: https://docs.gitlab.com/ee/security/reset_root_password.html
+
+
+**** HAProxy Log
+
+- RFC5424 mode: (https://tools.ietf.org/html/rfc5424#section-6.2)
+
+#+BEGIN_SRC
+<150>1 2018-08-10T00:02:27+00:00 ip-172-31-2-59 haproxy 1365 - - 65.87.19.170:40232 [10/Aug/2018:00:02:27.984] default helloflask/docker8002 3/0/0/1/4 200 216 - - ---- 1/1/0/1/0 0/0 "GET / HTTP/1.1"
+#+END_SRC
+
+- From syslog:
+
+#+BEGIN_SRC
+Aug 10 00:02:27 ip-172-31-2-59 haproxy[1365]: 65.87.19.170:40232 [10/Aug/2018:00:02:27.984] default helloflask/docker8002 3/0/0/1/4 200 216 - - ---- 1/1/0/1/0 0/0 "GET / HTTP/1.1"
+#+END_SRC
+
+- To dump from UDP ~sudo tcpdump -i lo udp port 5140 -vv -A~

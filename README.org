@@ -22,10 +22,16 @@ Streamlined test-in-production may ease the pain of setting up an ideal test env
 
 
 
-** Use Case
+** This Repo as A Demo
 
-The project use a basic streaming pipeline for demonstration. A Twitter Streaming API subscriber script handles the generation of data. A set of scripts built for Kafka facilitates the transfer of data from the source to analytics and storage sinks.
-
+This project will build a pipeline and a dashboard for web traffic log data.
+The intention is to provide a user-friendly interface for observing/comparing/contrasting webserver performances.
+The system can be summarized as:
+  1. CI tool spins up VM/containers which serves new codes and updates load-balancer settings.
+  2. Load-balancer collects and logs various measurements from the services.
+  4. A data pipeline collects and parses the log data.
+  5. Metrics from the data is then aggregated into databases and populated in the dashboards.
+  5. Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
 
 
 ** Get Started
@@ -33,7 +39,7 @@ The project use a basic streaming pipeline for demonstration. A Twitter Streamin
 *** Setup the demostration (howto for use this repo)
 TODO
 
-*** Expected result
+*** TODO Expected result
 1. Check thing are up and connected.
 2. Take a look on the Grafana Dashboard. The Dashboard will display:
    - Latency: completion time for each tasks for the nodes.
@@ -54,25 +60,33 @@ TODO
 5. (Add new branch, and test. (does this make sense?))
 
 
-** Tech Stack
+** Tech Stack Overview
 
 ![Tech Stack Overview](./static/tech-stack.png)
 
 *** Gitlab CI/CD:
 
-- Consolidate vcs and CI/CD service
+- Consolidate VCS and CI/CD service
 - Great flexibility with Shell Runner (and etc.)
 - CI features are freely available. ([[https://about.gitlab.com/images/feature_page/gitlab-features.pdf][CE vs EE]])
-- Can setup [[https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/]["manual" process]].
+- Can setup [[https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/]["manual" process]] (when sign-off, QA, etc. required).
 
 *** Docker Swarm / Terraform + HAproxy
 
 - Simple and straightforward (as long as microservices)
 - Weighted load balancing included
+- Kubernetes, "the" contender, has all the features, but containering everything could be expensive.
 
-*** Airflow
+*** Fluentd
 
-- Dynamic workflow definition
-- Python😀
+- Small, simple, and straightforward.
+- Battle tested, yet highly flexible.
+- Open source.
 
-*** Logstash
+*** TODO Airflow
+
+- TBD
+
+*** Prometheus + InfluxDB + Grafana
+
+-  timeseries

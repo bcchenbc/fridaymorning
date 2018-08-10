@@ -1,37 +1,38 @@
 
 # Table of Contents
 
-1.  [FridayMorning](#org1fc97a3)
-    1.  [Problem Statement](#orgdd14c4e)
-    2.  [Proposed Solution](#org0588200)
-    3.  [Use Case](#org72a153c)
-    4.  [Get Started](#org7cf7d6b)
-        1.  [Setup the demostration (howto for use this repo)](#org097ba99)
-        2.  [Expected result](#org87add51)
-        3.  [Scenario](#org9f40c5b)
-    5.  [Tech Stack](#org0001474)
-        1.  [Gitlab CI/CD:](#org11a9caf)
-        2.  [Docker Swarm / Terraform + HAproxy](#orga19b184)
-        3.  [Airflow](#org1bd502e)
+1.  [FridayMorning](#org59dd02c)
+    1.  [Problem Statement](#org6b6a1dc)
+    2.  [Proposed Solution](#org8d97786)
+    3.  [This Repo as A Demo](#orgc69754d)
+    4.  [Get Started](#org7adbb32)
+        1.  [Setup the demostration (howto for use this repo)](#orga695d03)
+        2.  [Expected result](#org7d7e73b)
+        3.  [Scenario](#orga692129)
+    5.  [Tech Stack](#org69584e5)
+        1.  [Gitlab CI/CD:](#org5259880)
+        2.  [Docker Swarm / Terraform + HAproxy](#orgf4f8f60)
+        3.  [Fluentd](#orgc6d2006)
+        4.  [Airflow](#org5d411aa)
 
 \#+TITLE FridayMorning org-mode -**- mode: org -**-
 
 
-<a id="org1fc97a3"></a>
+<a id="org59dd02c"></a>
 
 # FridayMorning
 
 A learning (An exploratory) DevOps project for doing new release on Friday Morning (!?)
 
 
-<a id="orgdd14c4e"></a>
+<a id="org6b6a1dc"></a>
 
 ## Problem Statement
 
 Testing can be expensive and high maintenance to work, to be informative, and reflect the reality. It is fundamental but potentially slow-moving part to any software engineering project. Services that relies on real user feedback or real performance in production will benefit the most from this project. Additional benefit may include cost contamination and time for disaster recovery.
 
 
-<a id="org0588200"></a>
+<a id="org8d97786"></a>
 
 ## Proposed Solution
 
@@ -43,28 +44,36 @@ Streamlined test-in-production may ease the pain of setting up an ideal test env
 -   Monitoring tools
 
 
-<a id="org72a153c"></a>
+<a id="orgc69754d"></a>
 
-## Use Case
+## This Repo as A Demo
 
-The project use a basic streaming pipeline for demonstration. A Twitter Streaming API subscriber script handles the generation of data. A set of scripts built for Kafka facilitates the transfer of data from the source to analytics and storage sinks.
+This project will build a pipeline and a dashboard for web traffic log data.
+The intention is to provide a user-friendly interface for observing/comparing/contrasting webserver performances.
+The system can be summarized as:
+
+1.  CI tool spins up VM/containers which serves new codes and updates load-balancer settings.
+2.  Load-balancer collects and logs various measurements from the services.
+3.  A data pipeline collects and parses the log data.
+4.  Metrics from the data is then aggregated into databases and populated in the dashboards.
+5.  Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
 
 
-<a id="org7cf7d6b"></a>
+<a id="org7adbb32"></a>
 
 ## Get Started
 
 
-<a id="org097ba99"></a>
+<a id="orga695d03"></a>
 
 ### Setup the demostration (howto for use this repo)
 
 TODO
 
 
-<a id="org87add51"></a>
+<a id="org7d7e73b"></a>
 
-### Expected result
+### TODO Expected result
 
 1.  Check thing are up and connected.
 2.  Take a look on the Grafana Dashboard. The Dashboard will display:
@@ -76,9 +85,10 @@ TODO
 4.  A Runner (using Gitlab CI shell runner here) will be triggered to perform a set of jobs based on [.gitlab-ci.yaml].
 5.  Let's check the dashboard for the changes.
 6.  Check Airflow jobs scheduled.
+7.  Check Log (TODO) aggregator for new logs.
 
 
-<a id="org9f40c5b"></a>
+<a id="orga692129"></a>
 
 ### Scenario
 
@@ -89,34 +99,44 @@ TODO
 5.  (Add new branch, and test. (does this make sense?))
 
 
-<a id="org0001474"></a>
+<a id="org69584e5"></a>
 
 ## Tech Stack
 
+\![Tech Stack Overview](./static/tech-stack.png)
 
-<a id="org11a9caf"></a>
+
+<a id="org5259880"></a>
 
 ### Gitlab CI/CD:
 
--   Consolidate vcs and CI/CD service
+-   Consolidate VCS and CI/CD service
 -   Great flexibility with Shell Runner (and etc.)
 -   CI features are freely available. ([CE vs EE](https://about.gitlab.com/images/feature_page/gitlab-features.pdf))
--   Can setup ["manual" process](https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/).
+-   Can setup ["manual" process](https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/) (when sign-off, QA, etc. required).
 
 
-<a id="orga19b184"></a>
+<a id="orgf4f8f60"></a>
 
 ### Docker Swarm / Terraform + HAproxy
 
 -   Simple and straightforward (as long as microservices)
 -   Weighted load balancing included
+-   Kubernetes, "the" contender, has all the features, but containering everything could be expensive.
 
 
-<a id="org1bd502e"></a>
+<a id="orgc6d2006"></a>
+
+### Fluentd
+
+-   Small, simple, and straightforward.
+-   Battle tested, yet highly flexible.
+-   Open source.
+
+
+<a id="org5d411aa"></a>
 
 ### Airflow
 
 -   Dynamic workflow definition
 -   Python😀
-
-\![Tech Stack Overview](./static/tech-stack.png)
