@@ -29,6 +29,20 @@ $UDPServerRun 514
 - HAProxy for availability: https://debian-administration.org/article/709/Using_the_haproxy_load-balancer_for_increased_availability
 - Using Ansible: https://blog.toast38coza.me/setup-and-configure-haproxy-with-ansible/
 
+
+- With Fluentd https://medium.com/@tom.fawcett/extracting-useful-duration-metrics-from-haproxy-prometheus-fluentd-2be9832ff702
+
+- Initialize webservice and haproxy config.
+#+BEGIN_SRC bash
+#!/bin/bash
+for (( i=0; i<10; i++ )); do
+  NAME=webservice$(printf "%.2d" $i)
+  PORT=$(expr 10000 + $i)
+  docker run -d -p $PORT:80 --name $NAME helloflask
+  echo "        server $NAME 127.0.0.1:$PORT weight 1" | sudo tee -a /etc/haproxy/haproxy.cfg
+done
+#+END_SRC
+
 **** Stretch Goal
 
 - Look into [[http://riemann.io/quickstart.html][Riemann]] for monitoring+alerting.
@@ -58,3 +72,9 @@ Aug 10 00:02:27 ip-172-31-2-59 haproxy[1365]: 65.87.19.170:40232 [10/Aug/2018:00
 #+END_SRC
 
 - To dump from UDP ~sudo tcpdump -i lo udp port 5140 -vv -A~
+
+**** Fluentd
+
+- Install plugins ~sudo td-agent-gem install fluent-plugin-influxdb fluent-plugin-prometheus~
+
+- HA configuration: https://support.treasuredata.com/hc/en-us/articles/360000676967

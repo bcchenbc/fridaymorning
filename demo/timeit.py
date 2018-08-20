@@ -7,7 +7,7 @@ import urllib3
 from collections import defaultdict
 
 #SERVER_ADDRESS = 'http://localhost:8000'
-SERVER_ADDRESS = 'http://ec2-54-218-107-24.us-west-2.compute.amazonaws.com/'
+SERVER_ADDRESS = 'http://52.13.238.109/'
 
 to_close = []
 interrupted = False
@@ -36,7 +36,7 @@ print(r.data.decode().split())
 def fun():
     r = http.request('GET', SERVER_ADDRESS)
     text = r.data.decode()
-    server = text.split()[2]
+    server = text.split()[1]
     return server
 
 def timed(fun):

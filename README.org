@@ -1,43 +1,58 @@
 #+TITLE FridayMorning org-mode -*- mode: org -*-
 
 * FridayMorning
-A learning (An exploratory) DevOps project for doing new release on Friday Morning (!?)
+A learning (An exploratory) DevOps project for performing test in production on Friday Morning
 
 
 
-** Problem Statement
+** TODO Problem Statement
 
-Testing can be expensive and high maintenance to work, to be informative, and reflect the reality. It is fundamental but potentially slow-moving part to any software engineering project. Services that relies on real user feedback or real performance in production will benefit the most from this project. Additional benefit may include cost contamination and time for disaster recovery.
+Testing is a fundamental but potentially speed-limiting part to software engineering projects.
+Conducting tests that reflect the real world can be expensive.
+The cost associated with maintaining the testing environment and careful engineering can be
+Also, users can behave unexpectedly.
+User facing services (web, apps) will benefit the most from doing test in productiong.
 
 
 
 ** Proposed Solution
 
-Streamlined test-in-production may ease the pain of setting up an ideal test environment. By directing a proportion of workload to containers or virtual machine with new feature/commit, this test-in-production setup can have the most direct feedback from real user. Also, with additional configuration, this setup will support tasks that require live migration. The deliverable will be a system build on:
+Streamlined test-in-production may ease the pain of setting up an ideal test environment.
+By directing a proportion of workload to containers or virtual machine with new feature/commit,
+this test-in-production setup can have the most direct feedback from real user.
+Also, with additional configuration, this setup will support tasks that require live migration.
+The deliverable will be a system build on:
 
-- CI/CD enabled version control system
-- Container/virtual machine orchestration software
-- Health/performance check and feedback mechanism for rollout/failure-recovery/rollback
-- Monitoring tools
+- CI/CD enabled version control system (GitLab CI)
+- Container/virtual machine orchestration software (Docker Swarm)
+- Health/performance check and feedback mechanism to rollout/rollback (InfluxDB)
+- Monitoring tools (Grafana)
 
-
-
-** This Repo as A Demo
-
-This project will build a pipeline and a dashboard for web traffic log data.
-The intention is to provide a user-friendly interface for observing/comparing/contrasting webserver performances.
-The system can be summarized as:
-  1. CI tool spins up VM/containers which serves new codes and updates load-balancer settings.
-  2. Load-balancer collects and logs various measurements from the services.
-  4. A data pipeline collects and parses the log data.
-  5. Metrics from the data is then aggregated into databases and populated in the dashboards.
-  5. Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
+*** TODO Canary Testing
 
 
-** Get Started
+*** This Repo as A Demo
 
-*** Setup the demostration (howto for use this repo)
-TODO
+This project aims to streamline the expeience of delpoying new codes to production environment
+ and to provide a user-friendly interface for observing the performances of web services.
+This is done by setting up a pipeline for continuous deployment and a dashboard for web serivices performance monitoring.
+
+The basic workflow can be described as:
+   1. CI tool spins up VM/containers which serves new codes and updates load-balancer settings.
+   2. Load-balancer collects and logs various measurements from the services.
+   4. A data pipeline collects and parses the log data.
+   5. Metrics from the data is then aggregated into databases and populated in the dashboards.
+   5. Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
+
+
+** Get Started (how-to for this repo)
+
+*** TODO Scenario
+ 1. Commit to `Test` branch (up and destroy).
+ 2. Commit to `RC` branch (up and gradual scaling).
+ 3. Commit to `Master` branch (up and rollover).
+ 4. (Revert to old commit.)
+ 5. (Add new branch, and test. (does this make sense?))
 
 *** TODO Expected result
 1. Check thing are up and connected.
@@ -52,17 +67,18 @@ TODO
 6. Check Airflow jobs scheduled.
 7. Check Log (TODO) aggregator for new logs.
 
-*** Scenario
-1. Commit to `Test` branch (up and destroy).
-2. Commit to `RC` branch (up and gradual scaling).
-3. Commit to `Master` branch (up and rollover).
-4. (Revert to old commit.)
-5. (Add new branch, and test. (does this make sense?))
+*** TODO Setup the environment
+
+*** TODO Simulate workload
+
+*** TODO Access to the dashboards
 
 
-** Tech Stack Overview
+** Tech Stack
 
-![Tech Stack Overview](./static/tech-stack.png)
+*** Overview
+
+ ![Tech Stack Overview](./static/tech-stack.png)
 
 *** Gitlab CI/CD:
 
@@ -90,3 +106,37 @@ TODO
 *** Prometheus + InfluxDB + Grafana
 
 -  timeseries
+- Chronograf has more friendly query builder, but percentile is not yet available.
+
+** Configuration Notes
+
+*** Gitlab CI
+
+**** Gitlab CI Server
+
+- Gitlab Server is based on official AMI.
+- Baremetal, GCP, etc. installation instructions/scripts are available [[https://about.gitlab.com/installation/][here]].
+- A c4.large (or larger) is recommended in the instruction, but not required in this light-load demonstrative system.
+
+**** Gitlab CI Runner
+
+- Gitlab Runner handles the building/testing/deployment tasks.
+- Have Shell Runners installed on the system where applications are deployed can be the most straightforward way for setting up the pipelines.
+- Runner installation instructions [[https://docs.gitlab.com/runner/install/][here]]. In short, install the package, get token from repo's [Settings > CI/CD > Runners], ~gitlab-runner register~ in service-providing servers.
+
+**** Fluentd
+
+- Fluentd is configured with multi-workers.
+- Fluentd is setup to listen to HAProxy through UDP. Capturing from log file (tail) is doable, and was easier to debug at the getting-hands-dirty stage, but disk usage and rsyslog setup are both unnecessary.
+- To have Fluentd works with other components, the plugins have to be installed first.
+
+**** Prometheus
+
+- Prometheus is
+
+**** Airflow
+
+- Airflow provides a simple interface for checking status of service after deployment.
+- When the service
+-
+-
