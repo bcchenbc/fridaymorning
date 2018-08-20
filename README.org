@@ -31,6 +31,7 @@ The deliverable will be a system build on:
 *** TODO Canary Testing
 
 
+<<<<<<< HEAD
 *** This Repo as A Demo
 
 This project aims to streamline the expeience of delpoying new codes to production environment
@@ -43,6 +44,18 @@ The basic workflow can be described as:
    4. A data pipeline collects and parses the log data.
    5. Metrics from the data is then aggregated into databases and populated in the dashboards.
    5. Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
+=======
+** This Repo as A Demo
+
+This project will build a pipeline and a dashboard for web traffic log data.
+The intention is to provide a user-friendly interface for observing/comparing/contrasting webserver performances.
+The system can be summarized as:
+  1. CI tool spins up VM/containers which serves new codes and updates load-balancer settings.
+  2. Load-balancer collects and logs various measurements from the services.
+  4. A data pipeline collects and parses the log data.
+  5. Metrics from the data is then aggregated into databases and populated in the dashboards.
+  5. Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
+>>>>>>> d86a2be13606a57c0f62b6bfe6a4ebd95d6fedb4
 
 
 ** Get Started (how-to for this repo)
@@ -74,7 +87,7 @@ The basic workflow can be described as:
 *** TODO Access to the dashboards
 
 
-** Tech Stack
+** Tech Stack Overview
 
 *** Overview
 
@@ -100,6 +113,7 @@ The basic workflow can be described as:
 - Open source.
 
 *** TODO Airflow
+
 
 - TBD
 
@@ -140,3 +154,10 @@ The basic workflow can be described as:
 - When the service
 -
 -
+=======
+
+- TBD
+
+*** Prometheus + InfluxDB + Grafana
+
+-  timeseries

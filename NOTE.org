@@ -29,6 +29,7 @@ $UDPServerRun 514
 - HAProxy for availability: https://debian-administration.org/article/709/Using_the_haproxy_load-balancer_for_increased_availability
 - Using Ansible: https://blog.toast38coza.me/setup-and-configure-haproxy-with-ansible/
 
+<<<<<<< HEAD
 
 - With Fluentd https://medium.com/@tom.fawcett/extracting-useful-duration-metrics-from-haproxy-prometheus-fluentd-2be9832ff702
 
@@ -43,6 +44,8 @@ for (( i=0; i<10; i++ )); do
 done
 #+END_SRC
 
+=======
+>>>>>>> d86a2be13606a57c0f62b6bfe6a4ebd95d6fedb4
 **** Stretch Goal
 
 - Look into [[http://riemann.io/quickstart.html][Riemann]] for monitoring+alerting.
@@ -72,9 +75,12 @@ Aug 10 00:02:27 ip-172-31-2-59 haproxy[1365]: 65.87.19.170:40232 [10/Aug/2018:00
 #+END_SRC
 
 - To dump from UDP ~sudo tcpdump -i lo udp port 5140 -vv -A~
+<<<<<<< HEAD
 
 **** Fluentd
 
 - Install plugins ~sudo td-agent-gem install fluent-plugin-influxdb fluent-plugin-prometheus~
 
 - HA configuration: https://support.treasuredata.com/hc/en-us/articles/360000676967
+=======
+>>>>>>> d86a2be13606a57c0f62b6bfe6a4ebd95d6fedb4

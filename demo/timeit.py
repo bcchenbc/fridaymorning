@@ -9,6 +9,7 @@ from collections import defaultdict
 #SERVER_ADDRESS = 'http://localhost:8000'
 SERVER_ADDRESS = 'http://52.13.238.109/'
 
+
 to_close = []
 interrupted = False
 
