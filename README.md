@@ -1,28 +1,29 @@
 
 # Table of Contents
 
-1.  [Problem Statement](#orgfc70845)
-2.  [Proposed Solution](#org217a4b1)
-    1.  [Canary Testing](#orge21e1cf)
-    2.  [The Demo](#org928752a)
-3.  [Tech Stack Overview](#org06e2b91)
-    1.  [Overview](#org159ea3c)
-    2.  [Gitlab CI/CD:](#org9d8f059)
-    3.  [Docker Swarm + HAProxy](#org4308154)
-    4.  [Fluentd](#orga5875bd)
-    5.  [InfluxDB + Grafana + Prometheus](#orgaf9e635)
-4.  [Configuration Notes](#org27d2677)
-    1.  [Gitlab CI](#org31a5454)
-        1.  [Gitlab CI Server](#orgf7763c4)
-        2.  [Gitlab CI Runner](#org4df2920)
-        3.  [Fluentd](#org9efa970)
+1.  [Problem Statement](#org078dc04)
+2.  [Proposed Solution](#orga957c65)
+    1.  [Canary Testing](#orga673fba)
+    2.  [The Demo](#orga44ba7d)
+3.  [Tech Stack Overview](#orgcfaa68e)
+    1.  [Overview](#org9d6e2e9)
+    2.  [Gitlab CI/CD:](#orgb65640d)
+    3.  [Docker Swarm + HAProxy](#org4cfb5e4)
+    4.  [Fluentd](#orgf1835b6)
+    5.  [InfluxDB + Grafana + Prometheus](#orga4c9f76)
+4.  [Configuration Notes](#org54e7ebb)
+    1.  [Gitlab CI](#orgd18f769)
+        1.  [Gitlab CI Server](#org5db5a5c)
+        2.  [Gitlab CI Runner](#org5640968)
+        3.  [Fluentd](#orgd00a037)
+5.  [For More Information](#orge5fd999)
 
 
 FridayMorning
 A learning (An exploratory) DevOps project for performing test in production on Friday Morning
 
 
-<a id="orgfc70845"></a>
+<a id="org078dc04"></a>
 
 # Problem Statement
 
@@ -33,7 +34,7 @@ Also, users can behave unexpectedly.
 Test in production can mitigate part of these problems.
 
 
-<a id="org217a4b1"></a>
+<a id="orga957c65"></a>
 
 # Proposed Solution
 
@@ -49,7 +50,7 @@ The deliverable will be a system build on:
 -   Monitoring tools (Grafana)
 
 
-<a id="orge21e1cf"></a>
+<a id="orga673fba"></a>
 
 ## Canary Testing
 
@@ -59,7 +60,7 @@ Defects that is not caught during the prerelease testing may be detected in this
 which allows timely rollback to prevent further damage even system outage.
 
 
-<a id="org928752a"></a>
+<a id="orga44ba7d"></a>
 
 ## The Demo
 
@@ -75,19 +76,19 @@ The basic workflow can be described as:
 5.  Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
 
 
-<a id="org06e2b91"></a>
+<a id="orgcfaa68e"></a>
 
 # Tech Stack Overview
 
 
-<a id="org159ea3c"></a>
+<a id="org9d6e2e9"></a>
 
 ## Overview
 
 \![Tech Stack Overview](./static/tech-stack.png)
 
 
-<a id="org9d8f059"></a>
+<a id="orgb65640d"></a>
 
 ## Gitlab CI/CD:
 
@@ -97,7 +98,7 @@ The basic workflow can be described as:
 -   Can setup ["manual" process](https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/) (when sign-off, QA, etc. required)
 
 
-<a id="org4308154"></a>
+<a id="org4cfb5e4"></a>
 
 ## Docker Swarm + HAProxy
 
@@ -107,7 +108,7 @@ The basic workflow can be described as:
 -   Kubernetes, "the" contender, has all the features, but containering everything could be expensive
 
 
-<a id="orga5875bd"></a>
+<a id="orgf1835b6"></a>
 
 ## Fluentd
 
@@ -115,7 +116,7 @@ The basic workflow can be described as:
 -   Natively supports log delivery for multiple programming languages, ideal for non-web applications
 
 
-<a id="orgaf9e635"></a>
+<a id="orga4c9f76"></a>
 
 ## InfluxDB + Grafana + Prometheus
 
@@ -124,17 +125,17 @@ The basic workflow can be described as:
 -   Chronograf has more friendly query builder, but percentile is not yet available
 
 
-<a id="org27d2677"></a>
+<a id="org54e7ebb"></a>
 
 # Configuration Notes
 
 
-<a id="org31a5454"></a>
+<a id="orgd18f769"></a>
 
 ## Gitlab CI
 
 
-<a id="orgf7763c4"></a>
+<a id="org5db5a5c"></a>
 
 ### Gitlab CI Server
 
@@ -143,7 +144,7 @@ The basic workflow can be described as:
 -   A c4.large (or larger) is recommended in the instruction, but not required in this light-load demonstrative system.
 
 
-<a id="org4df2920"></a>
+<a id="org5640968"></a>
 
 ### Gitlab CI Runner
 
@@ -152,11 +153,20 @@ The basic workflow can be described as:
 -   Runner installation instructions [here](https://docs.gitlab.com/runner/install/). In short, install the package, get token from repo's [Settings > CI/CD > Runners], `gitlab-runner register` in service-providing servers.
 
 
-<a id="org9efa970"></a>
+<a id="orgd00a037"></a>
 
 ### Fluentd
 
 -   Fluentd is configured with multi-workers.
 -   Fluentd is setup to listen to HAProxy through UDP. Capturing from log file (tail) is doable, and was easier to debug at the getting-hands-dirty stage, but disk usage and rsyslog setup are both unnecessary.
 -   To have Fluentd works with other components, the plugins have to be installed first.
+
+
+<a id="orge5fd999"></a>
+
+# For More Information
+
+-   Check .gitlab-ci.yml for configuring CI pipeline in this repository of [the web service](https://gitlab.frimorn.net/FridayMorning/).
+
+-   Here for [Presentation slides](https://goo.gl/4P3o8M).
 

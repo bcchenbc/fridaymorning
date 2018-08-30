@@ -106,3 +106,9 @@ The basic workflow can be described as:
 - Fluentd is setup to listen to HAProxy through UDP. Capturing from log file (tail) is doable, and was easier to debug at the getting-hands-dirty stage, but disk usage and rsyslog setup are both unnecessary.
 - To have Fluentd works with other components, the plugins have to be installed first.
 
+
+** For More Information
+
+- Check .gitlab-ci.yml for configuring CI pipeline in this repository of [[https://gitlab.frimorn.net/FridayMorning/][the web service]].
+
+- Here for [[https://goo.gl/4P3o8M][Presentation slides]].
