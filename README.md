@@ -1,3 +1,7 @@
+FridayMorning
+=============
+A learning (An exploratory) DevOps project for performing test in production on Friday Morning
+
 
 # Table of Contents
 
@@ -19,8 +23,6 @@
 5.  [For More Information](#orge5fd999)
 
 
-FridayMorning
-A learning (An exploratory) DevOps project for performing test in production on Friday Morning
 
 
 <a id="org078dc04"></a>
@@ -85,7 +87,7 @@ The basic workflow can be described as:
 
 ## Overview
 
-\![Tech Stack Overview](./static/tech-stack.png)
+![Tech Stack Overview](./static/tech-stack.png)
 
 
 <a id="orgb65640d"></a>
@@ -166,7 +168,7 @@ The basic workflow can be described as:
 
 # For More Information
 
--   Check .gitlab-ci.yml for configuring CI pipeline in this repository of [the web service](https://gitlab.frimorn.net/FridayMorning/).
+-   Check ".gitlab-ci.yml" for configuring CI pipeline in this [repository of the web service](https://gitlab.frimorn.net/FridayMorning/).
 
--   Here for [Presentation slides](https://goo.gl/4P3o8M).
+-   [Here](https://goo.gl/4P3o8M) for presentation slides.
 
