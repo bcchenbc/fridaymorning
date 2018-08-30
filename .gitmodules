@@ -1,6 +1,0 @@
-[submodule "service/frontend"]
-	path = service/frontend
-	url = git@gitlab.com:bcchenbc/helloflask.git
-[submodule "services/frontend"]
-	path = services/frontend
-	url = git@gitlab.com:bcchenbc/helloflask.git
