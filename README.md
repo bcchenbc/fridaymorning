@@ -1,142 +1,162 @@
 
 # Table of Contents
 
-1.  [FridayMorning](#org59dd02c)
-    1.  [Problem Statement](#org6b6a1dc)
-    2.  [Proposed Solution](#org8d97786)
-    3.  [This Repo as A Demo](#orgc69754d)
-    4.  [Get Started](#org7adbb32)
-        1.  [Setup the demostration (howto for use this repo)](#orga695d03)
-        2.  [Expected result](#org7d7e73b)
-        3.  [Scenario](#orga692129)
-    5.  [Tech Stack](#org69584e5)
-        1.  [Gitlab CI/CD:](#org5259880)
-        2.  [Docker Swarm / Terraform + HAproxy](#orgf4f8f60)
-        3.  [Fluentd](#orgc6d2006)
-        4.  [Airflow](#org5d411aa)
-
-\#+TITLE FridayMorning org-mode -**- mode: org -**-
-
-
-<a id="org59dd02c"></a>
-
-# FridayMorning
-
-A learning (An exploratory) DevOps project for doing new release on Friday Morning (!?)
+1.  [Problem Statement](#orgfc70845)
+2.  [Proposed Solution](#org217a4b1)
+    1.  [Canary Testing](#orge21e1cf)
+    2.  [The Demo](#org928752a)
+3.  [Tech Stack Overview](#org06e2b91)
+    1.  [Overview](#org159ea3c)
+    2.  [Gitlab CI/CD:](#org9d8f059)
+    3.  [Docker Swarm + HAProxy](#org4308154)
+    4.  [Fluentd](#orga5875bd)
+    5.  [InfluxDB + Grafana + Prometheus](#orgaf9e635)
+4.  [Configuration Notes](#org27d2677)
+    1.  [Gitlab CI](#org31a5454)
+        1.  [Gitlab CI Server](#orgf7763c4)
+        2.  [Gitlab CI Runner](#org4df2920)
+        3.  [Fluentd](#org9efa970)
 
 
-<a id="org6b6a1dc"></a>
-
-## Problem Statement
-
-Testing can be expensive and high maintenance to work, to be informative, and reflect the reality. It is fundamental but potentially slow-moving part to any software engineering project. Services that relies on real user feedback or real performance in production will benefit the most from this project. Additional benefit may include cost contamination and time for disaster recovery.
+FridayMorning
+A learning (An exploratory) DevOps project for performing test in production on Friday Morning
 
 
-<a id="org8d97786"></a>
+<a id="orgfc70845"></a>
 
-## Proposed Solution
+# Problem Statement
 
-Streamlined test-in-production may ease the pain of setting up an ideal test environment. By directing a proportion of workload to containers or virtual machine with new feature/commit, this test-in-production setup can have the most direct feedback from real user. Also, with additional configuration, this setup will support tasks that require live migration. The deliverable will be a system build on:
+Testing is a fundamental but potentially speed-limiting part in software development process.
+Conducting tests that reflect the real world can be expensive.
+The cost of infrastructure and engineer efforts to maintain an environment for testing may be significant.
+Also, users can behave unexpectedly. 
+Test in production can mitigate part of these problems.
 
--   CI/CD enabled version control system
--   Container/virtual machine orchestration software
--   Health/performance check and feedback mechanism for rollout/failure-recovery/rollback
--   Monitoring tools
+
+<a id="org217a4b1"></a>
+
+# Proposed Solution
+
+Streamlined test in production may ease the pain of setting up an ideal test environment.
+By directing a proportion of workload to containers or virtual machine with new feature/commit,
+this test-in-production setup will enable the collection of direct feedback from real user.
+Also, with additional configuration, this setup will support tasks that require live migration.
+The deliverable will be a system build on:
+
+-   CI/CD enabled version control system (GitLab CI)
+-   Container/virtual machine orchestration software (Docker Swarm)
+-   Health/performance check and feedback mechanism to rollout/rollback (InfluxDB)
+-   Monitoring tools (Grafana)
 
 
-<a id="orgc69754d"></a>
+<a id="orge21e1cf"></a>
 
-## This Repo as A Demo
+## Canary Testing
 
-This project will build a pipeline and a dashboard for web traffic log data.
-The intention is to provide a user-friendly interface for observing/comparing/contrasting webserver performances.
-The system can be summarized as:
+Canary testing is one of the methodologies of test in production.
+The basic idea is that the newly released codes will serve only a small proportion of services.
+Defects that is not caught during the prerelease testing may be detected in this canarying stage, 
+which allows timely rollback to prevent further damage even system outage.
 
-1.  CI tool spins up VM/containers which serves new codes and updates load-balancer settings.
+
+<a id="org928752a"></a>
+
+## The Demo
+
+This project aims to demonstrate a canary testing use case for a web service.
+This is done by setting up a pipeline for continuous deployment and a dashboard for web serivices performance monitoring.
+
+The basic workflow can be described as:
+
+1.  CI tool deploy new codes to containers that serve a load-balancer.
 2.  Load-balancer collects and logs various measurements from the services.
-3.  A data pipeline collects and parses the log data.
-4.  Metrics from the data is then aggregated into databases and populated in the dashboards.
+3.  A log collection system aggregates and parses all log data.
+4.  Metrics from the data is then aggregated into databases and populated on the dashboards.
 5.  Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
 
 
-<a id="org7adbb32"></a>
+<a id="org06e2b91"></a>
 
-## Get Started
-
-
-<a id="orga695d03"></a>
-
-### Setup the demostration (howto for use this repo)
-
-TODO
+# Tech Stack Overview
 
 
-<a id="org7d7e73b"></a>
+<a id="org159ea3c"></a>
 
-### TODO Expected result
-
-1.  Check thing are up and connected.
-2.  Take a look on the Grafana Dashboard. The Dashboard will display:
-    -   Latency: completion time for each tasks for the nodes.
-    -   Traffic: numbers of tasks completed by each node in a minutes.
-    -   Errors: numbers of malformed task calls, on each node.
-    -   Saturation: memory and cpu utilization for each ndoe.
-3.  Now, try to add a new feature to the pipeline. (Try the script "demo/add-new-feature.sh".
-4.  A Runner (using Gitlab CI shell runner here) will be triggered to perform a set of jobs based on [.gitlab-ci.yaml].
-5.  Let's check the dashboard for the changes.
-6.  Check Airflow jobs scheduled.
-7.  Check Log (TODO) aggregator for new logs.
-
-
-<a id="orga692129"></a>
-
-### Scenario
-
-1.  Commit to \`Test\` branch (up and destroy).
-2.  Commit to \`RC\` branch (up and gradual scaling).
-3.  Commit to \`Master\` branch (up and rollover).
-4.  (Revert to old commit.)
-5.  (Add new branch, and test. (does this make sense?))
-
-
-<a id="org69584e5"></a>
-
-## Tech Stack
+## Overview
 
 \![Tech Stack Overview](./static/tech-stack.png)
 
 
-<a id="org5259880"></a>
+<a id="org9d8f059"></a>
 
-### Gitlab CI/CD:
+## Gitlab CI/CD:
 
--   Consolidate VCS and CI/CD service
+-   Consolidated VCS and CI/CD service
 -   Great flexibility with Shell Runner (and etc.)
 -   CI features are freely available. ([CE vs EE](https://about.gitlab.com/images/feature_page/gitlab-features.pdf))
--   Can setup ["manual" process](https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/) (when sign-off, QA, etc. required).
+-   Can setup ["manual" process](https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/) (when sign-off, QA, etc. required)
 
 
-<a id="orgf4f8f60"></a>
+<a id="org4308154"></a>
 
-### Docker Swarm / Terraform + HAproxy
+## Docker Swarm + HAProxy
 
--   Simple and straightforward (as long as microservices)
--   Weighted load balancing included
--   Kubernetes, "the" contender, has all the features, but containering everything could be expensive.
+-   Docker Swarm is simple and straightforward (short lead time)
+-   HAProxy has out-of-box weighted load balancing support
+-   HAProxy can be integrated into Docker networks
+-   Kubernetes, "the" contender, has all the features, but containering everything could be expensive
 
 
-<a id="orgc6d2006"></a>
+<a id="orga5875bd"></a>
+
+## Fluentd
+
+-   Small, simple, straightforward, yet battle-tested
+-   Natively supports log delivery for multiple programming languages, ideal for non-web applications
+
+
+<a id="orgaf9e635"></a>
+
+## InfluxDB + Grafana + Prometheus
+
+-   SQL-like query supports, large user base, easy-to-use interfaces
+-   Efficient persistent timeseries storage
+-   Chronograf has more friendly query builder, but percentile is not yet available
+
+
+<a id="org27d2677"></a>
+
+# Configuration Notes
+
+
+<a id="org31a5454"></a>
+
+## Gitlab CI
+
+
+<a id="orgf7763c4"></a>
+
+### Gitlab CI Server
+
+-   Gitlab Server is based on official AMI.
+-   Baremetal, GCP, etc. installation instructions/scripts are available [here](https://about.gitlab.com/installation/).
+-   A c4.large (or larger) is recommended in the instruction, but not required in this light-load demonstrative system.
+
+
+<a id="org4df2920"></a>
+
+### Gitlab CI Runner
+
+-   Gitlab Runner handles the building/testing/deployment tasks.
+-   Have Shell Runners installed on the system where applications are deployed can be the most straightforward way for setting up the pipelines.
+-   Runner installation instructions [here](https://docs.gitlab.com/runner/install/). In short, install the package, get token from repo's [Settings > CI/CD > Runners], `gitlab-runner register` in service-providing servers.
+
+
+<a id="org9efa970"></a>
 
 ### Fluentd
 
--   Small, simple, and straightforward.
--   Battle tested, yet highly flexible.
--   Open source.
+-   Fluentd is configured with multi-workers.
+-   Fluentd is setup to listen to HAProxy through UDP. Capturing from log file (tail) is doable, and was easier to debug at the getting-hands-dirty stage, but disk usage and rsyslog setup are both unnecessary.
+-   To have Fluentd works with other components, the plugins have to be installed first.
 
-
-<a id="org5d411aa"></a>
-
-### Airflow
-
--   Dynamic workflow definition
--   Python😀

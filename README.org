@@ -1,25 +1,25 @@
 #+TITLE FridayMorning org-mode -*- mode: org -*-
 
-* FridayMorning
+FridayMorning
 A learning (An exploratory) DevOps project for performing test in production on Friday Morning
 
 
 
-** TODO Problem Statement
+** Problem Statement
 
-Testing is a fundamental but potentially speed-limiting part to software engineering projects.
+Testing is a fundamental but potentially speed-limiting part in software development process.
 Conducting tests that reflect the real world can be expensive.
-The cost associated with maintaining the testing environment and careful engineering can be
-Also, users can behave unexpectedly.
-User facing services (web, apps) will benefit the most from doing test in productiong.
+The cost of infrastructure and engineer efforts to maintain an environment for testing may be significant.
+Also, users can behave unexpectedly. 
+Test in production can mitigate part of these problems.
 
 
 
 ** Proposed Solution
 
-Streamlined test-in-production may ease the pain of setting up an ideal test environment.
+Streamlined test in production may ease the pain of setting up an ideal test environment.
 By directing a proportion of workload to containers or virtual machine with new feature/commit,
-this test-in-production setup can have the most direct feedback from real user.
+this test-in-production setup will enable the collection of direct feedback from real user.
 Also, with additional configuration, this setup will support tasks that require live migration.
 The deliverable will be a system build on:
 
@@ -28,63 +28,27 @@ The deliverable will be a system build on:
 - Health/performance check and feedback mechanism to rollout/rollback (InfluxDB)
 - Monitoring tools (Grafana)
 
-*** TODO Canary Testing
+*** Canary Testing
+
+Canary testing is one of the methodologies of test in production.
+The basic idea is that the newly released codes will serve only a small proportion of services.
+Defects that is not caught during the prerelease testing may be detected in this canarying stage, 
+which allows timely rollback to prevent further damage even system outage.
 
 
-<<<<<<< HEAD
-*** This Repo as A Demo
 
-This project aims to streamline the expeience of delpoying new codes to production environment
- and to provide a user-friendly interface for observing the performances of web services.
+*** The Demo
+
+This project aims to demonstrate a canary testing use case for a web service.
 This is done by setting up a pipeline for continuous deployment and a dashboard for web serivices performance monitoring.
 
 The basic workflow can be described as:
-   1. CI tool spins up VM/containers which serves new codes and updates load-balancer settings.
+   1. CI tool deploy new codes to containers that serve a load-balancer.
    2. Load-balancer collects and logs various measurements from the services.
-   4. A data pipeline collects and parses the log data.
-   5. Metrics from the data is then aggregated into databases and populated in the dashboards.
+   4. A log collection system aggregates and parses all log data.
+   5. Metrics from the data is then aggregated into databases and populated on the dashboards.
    5. Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
-=======
-** This Repo as A Demo
 
-This project will build a pipeline and a dashboard for web traffic log data.
-The intention is to provide a user-friendly interface for observing/comparing/contrasting webserver performances.
-The system can be summarized as:
-  1. CI tool spins up VM/containers which serves new codes and updates load-balancer settings.
-  2. Load-balancer collects and logs various measurements from the services.
-  4. A data pipeline collects and parses the log data.
-  5. Metrics from the data is then aggregated into databases and populated in the dashboards.
-  5. Monitoring/alerting tools will provide feedback to users and trigger rollout/rollback to settings.
->>>>>>> d86a2be13606a57c0f62b6bfe6a4ebd95d6fedb4
-
-
-** Get Started (how-to for this repo)
-
-*** TODO Scenario
- 1. Commit to `Test` branch (up and destroy).
- 2. Commit to `RC` branch (up and gradual scaling).
- 3. Commit to `Master` branch (up and rollover).
- 4. (Revert to old commit.)
- 5. (Add new branch, and test. (does this make sense?))
-
-*** TODO Expected result
-1. Check thing are up and connected.
-2. Take a look on the Grafana Dashboard. The Dashboard will display:
-   - Latency: completion time for each tasks for the nodes.
-   - Traffic: numbers of tasks completed by each node in a minutes.
-   - Errors: numbers of malformed task calls, on each node.
-   - Saturation: memory and cpu utilization for each ndoe.
-3. Now, try to add a new feature to the pipeline. (Try the script "demo/add-new-feature.sh".
-4. A Runner (using Gitlab CI shell runner here) will be triggered to perform a set of jobs based on [.gitlab-ci.yaml].
-5. Let's check the dashboard for the changes.
-6. Check Airflow jobs scheduled.
-7. Check Log (TODO) aggregator for new logs.
-
-*** TODO Setup the environment
-
-*** TODO Simulate workload
-
-*** TODO Access to the dashboards
 
 
 ** Tech Stack Overview
@@ -95,32 +59,30 @@ The system can be summarized as:
 
 *** Gitlab CI/CD:
 
-- Consolidate VCS and CI/CD service
+- Consolidated VCS and CI/CD service
 - Great flexibility with Shell Runner (and etc.)
 - CI features are freely available. ([[https://about.gitlab.com/images/feature_page/gitlab-features.pdf][CE vs EE]])
-- Can setup [[https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/]["manual" process]] (when sign-off, QA, etc. required).
+- Can setup [[https://about.gitlab.com/2016/08/26/ci-deployment-and-environments/]["manual" process]] (when sign-off, QA, etc. required)
 
-*** Docker Swarm / Terraform + HAproxy
+*** Docker Swarm + HAProxy
 
-- Simple and straightforward (as long as microservices)
-- Weighted load balancing included
-- Kubernetes, "the" contender, has all the features, but containering everything could be expensive.
+- Docker Swarm is simple and straightforward (short lead time)
+- HAProxy has out-of-box weighted load balancing support
+- HAProxy can be integrated into Docker networks
+- Kubernetes, "the" contender, has all the features, but containering everything could be expensive
 
 *** Fluentd
 
-- Small, simple, and straightforward.
-- Battle tested, yet highly flexible.
-- Open source.
+- Small, simple, straightforward, yet battle-tested
+- Natively supports log delivery for multiple programming languages, ideal for non-web applications
 
-*** TODO Airflow
+*** InfluxDB + Grafana + Prometheus
+
+- SQL-like query supports, large user base, easy-to-use interfaces
+- Efficient persistent timeseries storage
+- Chronograf has more friendly query builder, but percentile is not yet available
 
 
-- TBD
-
-*** Prometheus + InfluxDB + Grafana
-
--  timeseries
-- Chronograf has more friendly query builder, but percentile is not yet available.
 
 ** Configuration Notes
 
@@ -144,20 +106,3 @@ The system can be summarized as:
 - Fluentd is setup to listen to HAProxy through UDP. Capturing from log file (tail) is doable, and was easier to debug at the getting-hands-dirty stage, but disk usage and rsyslog setup are both unnecessary.
 - To have Fluentd works with other components, the plugins have to be installed first.
 
-**** Prometheus
-
-- Prometheus is
-
-**** Airflow
-
-- Airflow provides a simple interface for checking status of service after deployment.
-- When the service
--
--
-=======
-
-- TBD
-
-*** Prometheus + InfluxDB + Grafana
-
--  timeseries
