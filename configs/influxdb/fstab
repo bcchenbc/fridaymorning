@@ -1,0 +1,3 @@
+LABEL=cloudimg-rootfs                           /       ext4    defaults,discard    0   0
+UUID="36c6994b-0074-4152-916b-428350173626"     /DB     ext4    defaults,discard    0   0 
+ 

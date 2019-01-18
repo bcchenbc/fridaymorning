@@ -1,0 +1,2 @@
+- Mount an extra EBS to make moving data easier.
+- 

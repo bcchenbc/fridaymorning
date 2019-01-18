@@ -1,0 +1,26 @@
+stages:
+  - build
+  - test
+  - deploy
+
+Build image:
+  stage: build
+  before_script:
+    - git log
+    - ls -al
+    - pwd
+  script:
+    - "bash 01_build_image.sh"
+
+Prerelease tests:
+  stage: test
+  script: |
+    echo "insert some more tests here"
+
+Update service:
+  stage: deploy
+  before_script: 
+    - docker service ls
+  script: 
+    - "bash 02_update_service.sh"
+

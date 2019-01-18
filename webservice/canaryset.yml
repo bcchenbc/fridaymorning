@@ -1,0 +1,66 @@
+version: "3.3"
+
+services:
+  canaryset0:
+    image: webservice
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: any
+    ports:
+      - "20000:80"
+    networks:
+      - webnet
+      
+  canaryset1:
+    image: webservice
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: any
+    ports:
+      - "20001:80"
+    networks:
+      - webnet
+      
+  canaryset2:
+    image: webservice
+    deploy:
+      replicas: 4
+      restart_policy:
+        condition: any
+    ports:
+      - "20002:80"
+    networks:
+      - webnet
+      
+  canaryset3:
+    image: webservice
+    deploy:
+      replicas: 8
+      restart_policy:
+        condition: any
+    ports:
+      - "20003:80"
+    networks:
+      - webnet
+      
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+      
+  registry:
+    image: registry:2
+    ports:
+      - "5000:5000"
+      
+networks:
+  webnet:
